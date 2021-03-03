@@ -2,28 +2,28 @@ import java.util.*;
 
 public class JobScheduler {
 	
-	static void calcTurnAroundTime(int process[][],int waitingTime[],int turnAroundTime[])
+	static void calcTurnAroundTime(int process[][],int waitingTime[],int turnAroundTime[],int totalProcess)
 	{
 		int i;
-		for(i=0;i<4;i++)
+		for(i=0;i<totalProcess;i++)
 		{
 			turnAroundTime[i]= process[i][1]+waitingTime[i];
 		}
 	}
 	
-	static void calcCompletionTime(int process[][], int completionTime[], int turnAroundTime[])
+	static void calcCompletionTime(int process[][], int completionTime[], int turnAroundTime[], int totalProcess)
 	{
 		int i;
-		for(i=0;i<4;i++)
+		for(i=0;i<totalProcess;i++)
 		{
 			completionTime[i]=turnAroundTime[i]+process[i][0];
 		}
 	}
 	
-	static void calcWaitingTime(int process[][],int waitingTime[], int gant)
+	static void calcWaitingTime(int process[][],int waitingTime[], int gant,int totalProcess)
 	{
 		int i;
-		for(i=0;i<4;i++)
+		for(i=0;i<totalProcess;i++)
 		{
 			if(gant - process[i][0]<=0)
 			{
@@ -37,101 +37,70 @@ public class JobScheduler {
 		}
 	}
 	
-	static void calcMaxWaitingTime(int process[][],int waitingTime[], int gant)
+	static void calcMaxWaitingTime(int process[][],int waitingTime[], int gant, int totalProcess)
 	{
-		calcWaitingTime(process, waitingTime, gant);
+		calcWaitingTime(process, waitingTime, gant,totalProcess);
 		int maxWaitingTime =0, i;
-		for(i=0;i<4;i++)
+		for(i=0;i<totalProcess;i++)
 		{
 			if(maxWaitingTime<waitingTime[i]){
 				maxWaitingTime=waitingTime[i];
 			}
 		}
-		System.out.println("\n MAXIMUM Waiting Time is : " + maxWaitingTime);
+		System.out.println("\nThe Maximum Waiting Time is : " + maxWaitingTime);
 		
 	}
 	
-	static void calcaverageWaitingTime(int process[][],int waitingTime[],int gant)
+	static void calcaverageWaitingTime(int process[][],int waitingTime[],int gant, int totalProcess)
 	{
-		calcWaitingTime(process, waitingTime, gant);
+		calcWaitingTime(process, waitingTime, gant,totalProcess);
 		int i,totalWaitingTime=0;
 		
-		for(i=0;i<4;i++){
+		for(i=0;i<totalProcess;i++){
 			totalWaitingTime+=waitingTime[i];
 		}
 		
-		System.out.println("\nThe Average Waiting Time is: "+ totalWaitingTime/4);
+		System.out.println("\nThe Average Waiting Time is: "+ totalWaitingTime/totalProcess);
 	}
 	
 	public static void main(String[] args)
 	{
-		int processes[] ={1,2,3,4};
-		int totalProcessCount= processes.length;
-		int [][]timesAtAndBt ={{0,10},{6,10},{60,10},{110,5}};
+		
+		
+		//int [][]timesAtAndBt ={{0,10},{6,20},{60,10},{110,5}};
+		int i,j;
+		int gant=0;
+		int totalProcessCount =0;
+		int noOfTimes=2;
+		Scanner sc= new Scanner(System.in);
+		System.out.print("Enter the number of Process: ");
+		totalProcessCount = sc.nextInt();
+		int [][]timesAtAndBt = new int[totalProcessCount][noOfTimes];
+		//input of jobs
 		int []waitingTime= new int[totalProcessCount];
 		int []turnAroundTime=new int[totalProcessCount];
 		int []completionTime= new int[totalProcessCount];
-		
-		String more;
-		int i,choice,gant=0;
-		Scanner sc= new Scanner(System.in);
-		do
-		{
-			System.out.println("\n 1: Waiting Time "+"\n 2: Completion Time" +"\n 3: Turn Around Time "+"\n 4: Maximum Waiting Time"+"\n 5: Average Waiting Time");
-			choice =sc.nextInt();
-			
-			switch(choice)
-			{
-			case 1: 
-				calcWaitingTime(timesAtAndBt,waitingTime, gant);
-				int processNo;
-				System.out.println("\n Process"+"\t Waiting Time");
-				for(i=0; i<4;i++)
-				{
-					processNo=i+1;
-					System.out.println("  " +processNo+"\t\t" + waitingTime[i]);
-				}
-				break;
-			
-			case 2:
-				calcTurnAroundTime(timesAtAndBt, waitingTime, turnAroundTime);
-				calcCompletionTime(timesAtAndBt, completionTime, turnAroundTime);
-				int procNo;
-				System.out.println("\n Process"+"\t Completion Time");
-				for(i=0;i<4;i++)
-				{
-					procNo=i+1;
-					System.out.println("  " +procNo+"\t\t" + completionTime[i]);
-				}
-				break;
-			
-			case 3:
-				calcTurnAroundTime(timesAtAndBt, waitingTime, turnAroundTime);
-				int processNum;
-				System.out.println("\n Process"+"\t Turn Around Time");
-				for(i=0;i<4;i++)
-				{
-					processNum=i+1;
-					System.out.println("  " +processNum+"\t\t" + turnAroundTime[i]);
-				}
-				break;
-			
-			case 4: 
-				calcaverageWaitingTime(timesAtAndBt, waitingTime, gant);
-				break;
-			
-			case 5: 
-				calcMaxWaitingTime(timesAtAndBt, waitingTime, gant);
-				break;
-			
-			default:
-				System.out.println("\n Invalid Input: ");
+		for(i=0; i < totalProcessCount; i++){
+			System.out.println("Input for process " + (i+1));
+			for( j = 0; j < noOfTimes ; j++){				
+				timesAtAndBt[i][j] = sc.nextInt();
 			}
-			
-			System.out.println("Want to enter More ?(Y/N) : ");
-			more = sc.next();
-		}while(more.equals("Y")|| more.equals("y"));
-		sc.close();
-	}
-
+		}
+		
+		calcWaitingTime(timesAtAndBt,waitingTime, gant,totalProcessCount);
+		calcTurnAroundTime(timesAtAndBt, waitingTime, turnAroundTime,totalProcessCount);
+		calcCompletionTime(timesAtAndBt, completionTime, turnAroundTime,totalProcessCount);
+		
+        
+        System.out.println("\n Process"+"\t Completion Time"+"\t Waiting Time"+"\t Turn Around Time");
+		
+        for(i=0; i<totalProcessCount;i++)
+		{
+			j=i+1;
+			System.out.println("  " +j+"\t\t" + completionTime[i]+"\t\t\t" + waitingTime[i]+"\t\t\t" + turnAroundTime[i]);
+		}
+		calcaverageWaitingTime(timesAtAndBt, waitingTime, gant,totalProcessCount);
+		calcMaxWaitingTime(timesAtAndBt, waitingTime, gant,totalProcessCount);
+		
+}
 }
