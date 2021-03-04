@@ -68,7 +68,7 @@ public class HexCalc {
 			System.out.println("1.Add, sub, multiply or divide 2 numbers");
 			System.out.println("2.Compare 2 numbers");
 			System.out.println("3.For conversion");
-			System.out.println("5.Exit");
+			System.out.println("4.Exit");
 		
 			choice= sc.nextInt();
 			switch(choice)
@@ -131,13 +131,6 @@ public class HexCalc {
 				break;
 				
 			case 4:
-				
-				String hexaToDecimal=sc.next();
-				int decimal= Integer.parseInt(hexaToDecimal,16);
-				System.out.println(decimal);
-				break;
-				
-			case 5:
 				
 				flag= false;
 				break;
